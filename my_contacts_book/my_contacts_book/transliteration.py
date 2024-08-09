@@ -1,15 +1,11 @@
 import difflib
 
 TRANS_CYRILLIC_TO_LATIN = {
-    # Ваш словник перекладу тут
-    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
-    'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
-    'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts',
-    'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'y', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-    'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'H', 'Д': 'D', 'Е': 'E', 'Ё': 'YO', 'Ж': 'ZH',
-    'З': 'Z', 'И': 'I', 'Й': 'J', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O',
-    'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'KH', 'Ц': 'TS',
-    'Ч': 'CH', 'Ш': 'SH', 'Щ': 'SHCH', 'Ы': 'Y', 'Э': 'E', 'Ю': 'YU', 'Я': 'YA'
+    
+    'й': 'q', 'ц': 'w', 'у': 'e', 'к': 'r', 'е': 't', 'н': 'y', 'г': 'u', 'ш': 'i',
+    'щ': 'o', 'з': 'p', 'ф': 'a', 'і': 's', 'в': 'd', 'а': 'f', 'п': 'g', 'р': 'h',
+    'о': 'j', 'л': 'k', 'д': 'l', 'я': 'z', 'ч': 'x', 'с': 'c', 'м': 'v', 'и': 'b',
+    'т': 'n', 'ь': 'm'
 }
 
 def transliterate(text: str) -> str:
@@ -35,12 +31,11 @@ def suggest_command(user_input: str, commands: list[str]) -> str:
     Returns:
         str: The suggested command or '' if no close match is found.
     """
-    # Переведення введеного тексту у латиницю
+    
     user_input_transliterated = transliterate(user_input)
-    # Пошук найближчих команд
     closest_matches = difflib.get_close_matches(user_input_transliterated, commands, n=1, cutoff=0.1)
     
-    # Відбір найближчої команди, якщо така є
+    
     if closest_matches:
         return closest_matches[0]
     return ""

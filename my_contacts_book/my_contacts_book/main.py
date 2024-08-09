@@ -1,3 +1,5 @@
+import pickle
+from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 from handlers import (
     add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
@@ -5,7 +7,34 @@ from handlers import (
 )
 from colorama import init, Fore, Style
 
-init()
+init(autoreset=True)
+
+def save_data(book: AddressBook, filename: str = "addressbook.pkl") -> None:
+    """
+    Saves the address book to a file.
+
+    Args:
+        book (AddressBook): The address book instance to save.
+        filename (str): The filename to save the address book to.
+    """
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+def load_data(filename: str = "addressbook.pkl") -> AddressBook:
+    """
+    Loads the address book from a file.
+
+    Args:
+        filename (str): The filename to load the address book from.
+
+    Returns:
+        AddressBook: The loaded address book instance.
+    """
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()
 
 def print_message(message: str, is_error: bool = False) -> None:
     """
@@ -74,12 +103,15 @@ def parse_input(user_input: str) -> tuple[str, list[str]]:
     action = action.strip().lower()
     return action, args
 
-def print_help() -> None:
+def print_help() -> str:
     """
-    Prints a help message listing available commands and their usage.
+    Returns a help message listing available commands and their usage.
+
+    Returns:
+        str: The help message string.
     """
-    help_message = """
-    Available commands:
+    help_message = f"""
+    {Fore.CYAN}Available commands:
     - hello: Displays a greeting message.
     - help: Shows this help message.
     - add <name> <phone>: Adds a new contact with the specified name and phone number. 
@@ -93,7 +125,7 @@ def print_help() -> None:
     - birthdays: Shows upcoming birthdays within the next 7 days.
     - change-birthday <name> <new_birthday>: Changes the birthday for an existing contact.
     - delete <name>: Deletes a contact from the address book.
-    - close / exit / bye: Exits the program.
+    - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
     return help_message
 
@@ -101,17 +133,26 @@ def main() -> None:
     """
     Main function to run the assistant bot.
     """
-    book = AddressBook()
-    print("Welcome to the assistant bot!")
-    print_help()
+    book = load_data() 
+    print(f"{Fore.BLUE}Welcome to the assistant bot!{Style.RESET_ALL}")
+    print(print_help()) 
     while True:
         user_input = input("Enter a command:\n").strip().lower()
         if not user_input:
             continue
+
         action, args = parse_input(user_input)
+
+        suggested_command = suggest_command(action, ["hello", "add", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "delete", "help", "close", "exit", "bye"])
+        if suggested_command and suggested_command != action:
+            confirm = input(f"Do you mean '{suggested_command}'? (y/n): ").strip().lower()
+            if confirm == 'y':
+                action = suggested_command
+
         response = handle_action(action, args, book)
         print(response)
         if action in ["close", "exit", "bye"]:
+            save_data(book)
             break
 
 if __name__ == "__main__":

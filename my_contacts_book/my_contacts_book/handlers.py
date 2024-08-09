@@ -41,6 +41,7 @@ def add_contact(args: List[str], book: AddressBook) -> str:
         raise ValueError("Error: Give me name and phone please.")
     
     name, phone, *optional_args = args
+    name = name.capitalize()
     birthday = optional_args[0] if optional_args else None
     
     existing_record = book.find(name)
@@ -72,8 +73,8 @@ def change_contact(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) == 3:
-        # Three arguments: change the phone number
         name, old_phone, new_phone = args
+        name = name.capitalize()
         record = book.find(name)
         if record:
             record.edit_phone(old_phone, new_phone)
@@ -81,8 +82,8 @@ def change_contact(args: List[str], book: AddressBook) -> str:
         return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
     
     elif len(args) == 2:
-        # Two arguments: remove the phone number
         name, phone_to_remove = args
+        name = name.capitalize()
         record = book.find(name)
         if record:
             if record.find_phone(phone_to_remove):
@@ -110,7 +111,7 @@ def show_phone(args: List[str], book: AddressBook) -> str:
     if len(args) != 1:
         raise ValueError("Error: Give me name, please.")
     
-    name = args[0]
+    name = args[0].capitalize()
     record = book.find(name)
     if record:
         table = PrettyTable()
@@ -157,7 +158,7 @@ def delete_contact(args: List[str], book: AddressBook) -> str:
     if len(args) != 1:
         raise ValueError("Error: Give me name, please.")
     
-    name = args[0]
+    name = args[0].capitalize()
     record = book.find(name)
     if record:
         book.delete(name)
@@ -180,7 +181,7 @@ def add_birthday(args: List[str], book: AddressBook) -> str:
         raise ValueError("Error: Give me name and birthday please.")
     
     name, birthday = args
-    name = name.lower()
+    name = name.capitalize()
     record = book.find(name)
     if record:
         record.add_birthday(birthday)
@@ -202,7 +203,7 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
     if len(args) != 1:
         raise ValueError("Error: Give me name, please.")
     
-    name = args[0]
+    name = args[0].capitalize()
     record = book.find(name)
     if record:
         table = PrettyTable()
@@ -228,15 +229,15 @@ def change_birthday(args: List[str], book: AddressBook) -> str:
         raise ValueError("Error: Give me the name of the contact and the new birthday please.")
 
     name, new_birthday = args
-    name = name.lower()  # Приведення імені до маленьких букв
+    name = name.capitalize()
     record = book.find(name)
 
     if record:
         if record.birthday:
-            record.birthday = Birthday(new_birthday)  # Оновлюємо день народження
-            return f"{Fore.GREEN}Birthday updated.{Style.RESET_ALL}"  # Синій для позитивного повідомлення
+            record.birthday = Birthday(new_birthday)
+            return f"{Fore.GREEN}Birthday updated.{Style.RESET_ALL}" 
         else:
-            return f"{Fore.YELLOW}Contact has no existing birthday to update.{Style.RESET_ALL}"  # Помаранчевий для помилки
+            return f"{Fore.YELLOW}Contact has no existing birthday to update.{Style.RESET_ALL}" 
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
