@@ -38,16 +38,21 @@ Available commands:
 - add <name> <phone>: Adds a new contact with the specified name and phone number.
 ...
 Enter a command:
+```
 
+## Persistent Storage
 
-Persistent Storage
 The bot automatically saves your address book to disk when you exit the program and restores it when you start the program again. This means you won't lose your contacts between sessions.
 
-Contributing
+## Contributing
+
 Contributions are welcome! Please fork the repository and submit a pull request.
 
-Author
+## Author
+
 Oksana Donchuk
 ksunya.donchuk@gmail.com
+
+```
 
 ```
